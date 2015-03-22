@@ -7,8 +7,6 @@ import java.io.InputStreamReader;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Map;
-
 import javax.net.ssl.HttpsURLConnection;
 
 import no.northcode.jens.intranetsek2.timetable.Term;
@@ -22,20 +20,22 @@ import no.northcode.jens.intranetsek2.timetable.Term;
  */
 public class Login {
 
+
+
 	/** The school. */
-	public String school;
+	private String school;
 	
 	/** The _class. */
-	public String _class;
+	private String _class;
 	
 	/** The terms. */
-	public List<Term> terms;
+	private List<Term> terms;
 	
 	/** The default term. */
-	public Term defaultTerm;
+	private Term defaultTerm;
 	
 	/** The news. */
-	public List<News> news;
+	private List<News> news;
 	
 	/** The username. */
 	public String username;
@@ -45,6 +45,96 @@ public class Login {
 	
 	/** The sessionid. */
 	private String sessionid;
+	
+	/**
+	 * Gets the _class.
+	 *
+	 * @return the _class
+	 */
+	public String get_class() {
+		return _class;
+	}
+
+	/**
+	 * Sets the _class.
+	 *
+	 * @param _class the new _class
+	 */
+	public void set_class(String _class) {
+		this._class = _class;
+	}
+
+	/**
+	 * Gets the terms.
+	 *
+	 * @return the terms
+	 */
+	public List<Term> getTerms() {
+		return terms;
+	}
+
+	/**
+	 * Sets the terms.
+	 *
+	 * @param terms the new terms
+	 */
+	public void setTerms(List<Term> terms) {
+		this.terms = terms;
+	}
+
+	/**
+	 * Gets the default term.
+	 *
+	 * @return the default term
+	 */
+	public Term getDefaultTerm() {
+		return defaultTerm;
+	}
+
+	/**
+	 * Sets the default term.
+	 *
+	 * @param defaultTerm the new default term
+	 */
+	public void setDefaultTerm(Term defaultTerm) {
+		this.defaultTerm = defaultTerm;
+	}
+
+	/**
+	 * Gets the school.
+	 *
+	 * @return the school
+	 */
+	public String getSchool() {
+		return school;
+	}
+
+	/**
+	 * Gets the username.
+	 *
+	 * @return the username
+	 */
+	public String getUsername() {
+		return username;
+	}
+
+	/**
+	 * Sets the news.
+	 *
+	 * @param news the new news
+	 */
+	public void setNews(List<News> news) {
+		this.news = news;
+	}
+	
+	/**
+	 * Gets the news.
+	 *
+	 * @return the news
+	 */
+	public List<News> getNews() {
+		return news;
+	}
 	
 	//private static final String domain = "intranet.tam.ch";
 	/** The Constant URL. */
@@ -77,19 +167,10 @@ public class Login {
 		
 		// Post request parameters
 		
-		/*
 		StringBuilder builder = new StringBuilder();
 		builder.append("loginuser=").append(this.username).append("&loginpassword=").append(this.password).append("&loginschool=").append(this.school);
+		String urlParameters = builder.toString();
 		
-		String urlParametersTemp = builder.toString();
-		*/
-		
-		String urlParameters = "loginuser=" + 
-				this.username + 
-				"&loginpassword=" + 
-				this.password + 
-				"&loginschool=" + 
-				this.school;
 		byte[] postData = urlParameters.getBytes(Charset.forName("UTF-8"));
 		int postDataLength = postData.length;
 		
@@ -163,7 +244,7 @@ public class Login {
 	 * @return A list of News objects
 	 * @throws IOException When the WebRequest fails
 	 */
-	public List<News> getNews() throws IOException
+	public List<News> fetchNews() throws IOException
 	{
 		String requestUrl = URL + "/" + school + URL_NEWS;
 		String response = getRequest(requestUrl);
@@ -184,7 +265,9 @@ public class Login {
 	{
 		
 		//TODO: user StringBuilder
-		String cookies = "sturmuser=" + this.username + "; sturmsession=" + this.sessionid;
+		StringBuilder builder = new StringBuilder();
+		builder.append("sturmuser=").append(this.username).append("; sturmsession=").append(this.sessionid);
+		String cookies = builder.toString();
 		byte[] postData = postString.getBytes(Charset.forName("UTF-8"));
 		int postDataLength = postData.length;
 		
@@ -238,8 +321,9 @@ public class Login {
 	 */
 	public String getRequest(String url) throws IOException
 	{
-		//TODO: user StringBuilder
-		String cookies = "sturmuser=" + this.username + "; sturmsession=" + this.sessionid;
+		StringBuilder builder = new StringBuilder();
+		builder.append("sturmuser=").append(this.username).append("; sturmsession=").append(this.sessionid);
+		String cookies = builder.toString();
 		
 		URL obj = new URL(url);
 		System.out.println("Sending 'GET' request to URL : " + url);
@@ -266,26 +350,5 @@ public class Login {
 		
 		return response.toString();
 	}	
-	
-	public static String buildParameters(Map<String,String> parameters)
-	{
-		StringBuilder sb = new StringBuilder();
-		boolean first = true;
-		
-		for(Map.Entry<String, String> entry : parameters.entrySet())
-		{
-			if(!first)
-				sb.append("&");
-			else
-				first = false;
-			
-			sb.append(entry.getKey());
-			sb.append("=");
-			sb.append(entry.getValue());
-		}
-		
-		
-		return sb.toString();
-		
-	}
+
 }

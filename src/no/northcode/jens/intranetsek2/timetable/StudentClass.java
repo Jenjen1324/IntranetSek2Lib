@@ -106,7 +106,7 @@ public class StudentClass {
 	public void parseWeek(Login login, int week) throws IOException
 	{
 		// Build the request parameters
-		String requestUrl = Login.URL + "/" + login.school + Login.URL_TIMETABLE;
+		String requestUrl = Login.URL + "/" + login.getSchool() + Login.URL_TIMETABLE;
 		String postParameter = "sc=" + this.id + "&wk=" + week;
 		
 		// Get the timetable Page

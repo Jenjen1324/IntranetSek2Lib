@@ -146,7 +146,7 @@ public class Term {
 	 */
 	public void getClasslist(Login login) throws IOException
 	{
-		String requestUrl = Login.URL + "/" + login.school + Login.URL_TIMETABLE;
+		String requestUrl = Login.URL + "/" + login.getSchool() + Login.URL_TIMETABLE;
 		
 		String html = login.getRequest(requestUrl);
 		String ttUrl = Jsoup.parse(html).getElementById("external").attr("src");
@@ -175,7 +175,7 @@ public class Term {
 	 */
 	public void getWeekList(Login login) throws IOException
 	{
-		String requestUrl = Login.URL + "/" + login.school + Login.URL_TIMETABLE;
+		String requestUrl = Login.URL + "/" + login.getSchool() + Login.URL_TIMETABLE;
 		
 		String html = login.getRequest(requestUrl);
 		String ttUrl = Jsoup.parse(html).getElementById("external").attr("src");
@@ -206,7 +206,7 @@ public class Term {
 	 */
 	public static List<Term> parseTerms(Login login) throws IOException
 	{
-		String requestUrl = Login.URL + "/" + login.school + Login.URL_TIMETABLE;
+		String requestUrl = Login.URL + "/" + login.getSchool() + Login.URL_TIMETABLE;
 		
 		String html = login.getRequest(requestUrl);
 		String ttUrl = Jsoup.parse(html).getElementById("external").attr("src");
