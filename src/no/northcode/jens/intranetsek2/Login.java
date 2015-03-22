@@ -7,39 +7,63 @@ import java.io.InputStreamReader;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
+
 import javax.net.ssl.HttpsURLConnection;
 
 import no.northcode.jens.intranetsek2.timetable.Term;
 
-/***
- * Logs the user in and stores the login session
- * @author Jens V.
+// TODO: Auto-generated Javadoc
+/**
+ * *
+ * Logs the user in and stores the login session.
  *
+ * @author Jens V.
  */
 public class Login {
 
+	/** The school. */
 	public String school;
+	
+	/** The _class. */
 	public String _class;
+	
+	/** The terms. */
 	public List<Term> terms;
+	
+	/** The default term. */
 	public Term defaultTerm;
+	
+	/** The news. */
 	public List<News> news;
 	
+	/** The username. */
 	public String username;
 	
+	/** The password. */
 	private String password;
+	
+	/** The sessionid. */
 	private String sessionid;
 	
 	//private static final String domain = "intranet.tam.ch";
-	public static final String url = "https://intranet.tam.ch";
+	/** The Constant URL. */
+	public static final String URL = "https://intranet.tam.ch";
+	
+	/** The Constant URL_NEWS. */
 	public static final String URL_NEWS = "/index/all-appointments";
+	
+	/** The Constant URL_TIMETABLE. */
 	public static final String URL_TIMETABLE = "/external/index/act/tt_oneclassNew";
 	//private static final String URL_LIST_CLASS = "/list/index/list/45";
 	
-	/***
-	 * Logs the user in
-	 * @param username
-	 * @param password
-	 * @param school
+	/**
+	 * *
+	 * Logs the user in.
+	 *
+	 * @param username the username
+	 * @param password the password
+	 * @param school the school
 	 * @throws IOException When the request fails
 	 * @throws LoginException When the user can't log in (e.g. wrong credentials)
 	 */
@@ -69,12 +93,12 @@ public class Login {
 		byte[] postData = urlParameters.getBytes(Charset.forName("UTF-8"));
 		int postDataLength = postData.length;
 		
-		System.out.println("\nSending 'POST' request to URL : " + url);
+		System.out.println("\nSending 'POST' request to URL : " + URL);
 		System.out.println("Post parameters : " + urlParameters);
 		
 		URL obj = null;
 		try {
-			obj = new URL(url);
+			obj = new URL(URL);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -132,21 +156,25 @@ public class Login {
 		
 	}
 	
-	/***
-	 * Fetches the news of the frontpage
+	/**
+	 * *
+	 * Fetches the news of the frontpage.
+	 *
 	 * @return A list of News objects
 	 * @throws IOException When the WebRequest fails
 	 */
 	public List<News> getNews() throws IOException
 	{
-		String requestUrl = url + "/" + school + URL_NEWS;
+		String requestUrl = URL + "/" + school + URL_NEWS;
 		String response = getRequest(requestUrl);
 		
 		return News.parseNews(response);
 	}
 
-	/***
-	 * Does a POST request to the given URL and passes the session info and the data along
+	/**
+	 * *
+	 * Does a POST request to the given URL and passes the session info and the data along.
+	 *
 	 * @param url Url to make the request to
 	 * @param postString Postdata to send along
 	 * @return Html String of the result
@@ -200,8 +228,10 @@ public class Login {
 		return response.toString();
 	}
 
-	/***
-	 * Does a GET request to the given URL and passes the session info along
+	/**
+	 * *
+	 * Does a GET request to the given URL and passes the session info along.
+	 *
 	 * @param url Url to make the request to
 	 * @return Html String of the result
 	 * @throws IOException When there is an error with the request (No internet, etc)
@@ -236,4 +266,26 @@ public class Login {
 		
 		return response.toString();
 	}	
+	
+	public static String buildParameters(Map<String,String> parameters)
+	{
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		
+		for(Map.Entry<String, String> entry : parameters.entrySet())
+		{
+			if(!first)
+				sb.append("&");
+			else
+				first = false;
+			
+			sb.append(entry.getKey());
+			sb.append("=");
+			sb.append(entry.getValue());
+		}
+		
+		
+		return sb.toString();
+		
+	}
 }

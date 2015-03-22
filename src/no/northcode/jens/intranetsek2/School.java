@@ -9,19 +9,65 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+// TODO: Auto-generated Javadoc
 /**
- * A school where the user logs on to
- * @author Jens V.
+ * A school where the user logs on to.
  *
+ * @author Jens V.
  */
 public class School {
 
-	public String name;
-	public String id;
+	/** The name. */
+	private String name;
 	
-	/***
+	/** The id. */
+	private String id;
+	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * Instantiates a new school.
+	 *
+	 * @param id the id
+	 * @param name the name
+	 */
+	public School(String id, String name)
+	{
+		this.id = id;
+		this.name = name;
+	}
+	
+	/**
+	 * Instantiates a new school.
+	 *
+	 * @param id the id
+	 */
+	public School(String id)
+	{
+		this.id = id;
+	}
+	
+	/**
+	 * *
 	 * Gets the list of schools of which you can choose
-	 * Currently fetches them from the shiboleet page because I didn't bother looking for where the list is loaded on the frontpage
+	 * Currently fetches them from the shiboleet page because I didn't bother looking for where the list is loaded on the frontpage.
+	 *
 	 * @return A list of schools to choose from
 	 * @throws IOException When the download of the page fails
 	 */
@@ -36,9 +82,7 @@ public class School {
 		{
 			if(!e.attr("value").equals("-1"))
 			{
-				School s = new School();
-				s.name = e.text();
-				s.id = e.attr("value");
+				School s = new School(e.text(), e.attr("value"));
 				schools.add(s);
 			}
 		}
