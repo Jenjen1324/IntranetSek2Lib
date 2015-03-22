@@ -18,9 +18,32 @@ public class News {
 	// public ? fromDate
 	// public ? toDate
 	
+	//TODO: private, generate getters and setters
 	public String date;
 	public String text;
 	public String location;
+	
+	private String myName;
+	private String myOtherName;
+
+
+	public String getMyName() {
+		return myName;
+	}
+
+	public void setMyName(String myName) {
+		this.myName = myName;
+	}
+
+	public String getMyOtherName() {
+		return myOtherName;
+	}
+
+	public void setMyOtherName(String myOtherName) {
+		this.myOtherName = myOtherName;
+	}
+
+	
 	
 	/***
 	 * An object which stores a news entry
@@ -58,7 +81,7 @@ public class News {
 			News n = new News(date, text, location);
 			news.add(n);
 		}
-		
+	
 		return news;
 	}
 	

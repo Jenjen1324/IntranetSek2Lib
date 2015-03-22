@@ -15,6 +15,7 @@ import org.jsoup.select.Elements;
  */
 public class Person {
 	
+	// TODO: private members, generate getters and setters
 	public String name;
 	public String surname;
 	public String phone;

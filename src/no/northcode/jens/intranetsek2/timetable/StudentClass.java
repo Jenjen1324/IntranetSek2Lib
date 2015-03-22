@@ -16,25 +16,89 @@ import no.northcode.jens.intranetsek2.Login;
 import no.northcode.jens.intranetsek2.timetable.Lesson.LessonStatus;
 import no.northcode.jens.intranetsek2.timetable.Lesson.LessonType;
 
+// TODO: Auto-generated Javadoc
 /**
- * A class (group of students)
- * @author Jens V.
+ * A class (group of students).
  *
+ * @author Jens V.
  */
 public class StudentClass {
 
-	public String name;
-	public int id;
+	/** The name. */
+	private String name;
 	
-	public List<LessonGroup> lessons;
+	/** The id. */
+	private int id;
 	
+	/** The lessons. */
+	private List<LessonGroup> lessons;
+	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the new name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the id.
+	 *
+	 * @param id the new id
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * Gets the lessons.
+	 *
+	 * @return the lessons
+	 */
+	public List<LessonGroup> getLessons() {
+		return lessons;
+	}
+
+	/**
+	 * Sets the lessons.
+	 *
+	 * @param lessons the new lessons
+	 */
+	public void setLessons(List<LessonGroup> lessons) {
+		this.lessons = lessons;
+	}
+	
+	/**
+	 * Instantiates a new student class.
+	 */
 	public StudentClass()
 	{
 		this.lessons = new ArrayList<LessonGroup>();
 	}
 	
-	/***
-	 * Parses a timetable of the given week
+	/**
+	 * *
+	 * Parses a timetable of the given week.
+	 *
 	 * @param login Login object of a running session
 	 * @param week Integer of which week to choose
 	 * @throws IOException When the webrequest fails
@@ -105,8 +169,8 @@ public class StudentClass {
 						String endDate = dates[cellIndex] + " " + times[1]; // TODO: If multicell, set time to end of lesson
 						try
 						{
-							lg.startTime = format.parse(startDate);
-							lg.endTime = format.parse(endDate);
+							lg.setStartTime(format.parse(startDate));
+							lg.setEndTime(format.parse(endDate));
 							
 							// Check if multicell and add the skip value
 							if(cell.hasAttr("rowspan"))
@@ -129,11 +193,11 @@ public class StudentClass {
 									{
 										String split[] = e.html().split("<br>");
 										Lesson l = new Lesson();
-										l.name = split[0];
-										l.location = split[1];
-										l.type = LessonType.instrument;
+										l.setName(split[0]);
+										l.setLocation(split[1]);
+										l.setType(LessonType.instrument);
 										// TODO: Find out if lesson status can change!
-										lg.lessons.add(l);
+										lg.getLessons().add(l);
 									}
 									lessonCount--;
 								}
@@ -148,35 +212,35 @@ public class StudentClass {
 									if(spans.first().attr("class").contains("span"))
 									{
 										// Making every field optional as sometimes some of the values are missing but it's still a valid lesson
-										try { l.name = spans.get(0).getElementsByTag("strong").first().text(); } catch (Exception e) { l.name = "Unknown"; }
-										try { l.teacherInitials = spans.get(0).html().split("&nbsp;")[1]; } catch (Exception e) { }
-										try { l.toolTip = spans.get(0).attr("onmouseover").replace("tooltip('", "").replace("');", ""); } catch (Exception e) { }
-										try { l.location = spans.get(1).text(); } catch (Exception e) { }
+										try { l.setName(spans.get(0).getElementsByTag("strong").first().text()); } catch (Exception e) { l.setName("Unknown"); }
+										try { l.setTeacherInitials(spans.get(0).html().split("&nbsp;")[1]); } catch (Exception e) { }
+										try { l.setToolTip(spans.get(0).attr("onmouseover").replace("tooltip('", "").replace("');", "")); } catch (Exception e) { }
+										try { l.setLocation(spans.get(1).text()); } catch (Exception e) { }
 										try {
 											Element s = spans.get(0);
 											if(s.attr("class").contains("killfree"))
-												l.status = LessonStatus.dropped;
+												l.setStatus(LessonStatus.dropped);
 											else if(s.attr("class").contains("killmoved"))
-												l.status = LessonStatus.moved;
+												l.setStatus(LessonStatus.moved);
 											else if(s.attr("class").contains("substsubst"))
-												l.status = LessonStatus.movedTarget;
+												l.setStatus(LessonStatus.movedTarget);
 										} catch (Exception e) { }
 										
 										// Find out what status the lesson has
 										try	{
-											if(!l.status.equals(LessonStatus.normal))
+											if(!l.getStatus().equals(LessonStatus.normal))
 											{
 												if(i < (lessonCount - 1))
 												{
 													Element nextSpan = Jsoup.parseBodyFragment(lessonsString[i+1]).getElementsByTag("span").first();
 													if(nextSpan.attr("class").contains("comment"))
 													{
-														l.killMessage = nextSpan.text();
+														l.setKillMessage(nextSpan.text());
 													}
 												}
 											}
 										} catch (Exception e) { };
-										lg.lessons.add(l);
+										lg.getLessons().add(l);
 									}
 								}
 								this.lessons.add(lg);
@@ -185,9 +249,9 @@ public class StudentClass {
 							else if(cell.attr("class").equals("empty dayoff")) 
 							{
 								Lesson l = new Lesson();
-								l.name = cell.text();
-								l.type = LessonType.holiday;
-								lg.lessons.add(l);
+								l.setName(cell.text());
+								l.setType(LessonType.holiday);
+								lg.getLessons().add(l);
 								this.lessons.add(lg);
 							}
 						}
@@ -201,5 +265,7 @@ public class StudentClass {
 			}
 		}
 	}
+
+	
 	
 }

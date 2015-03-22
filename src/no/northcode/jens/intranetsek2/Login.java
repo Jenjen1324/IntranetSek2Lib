@@ -18,17 +18,16 @@ import no.northcode.jens.intranetsek2.timetable.Term;
  */
 public class Login {
 
-	public String username;
-	private String password;
 	public String school;
 	public String _class;
-	
-	String sessionid;
-	
 	public List<Term> terms;
 	public Term defaultTerm;
 	public List<News> news;
 	
+	public String username;
+	
+	private String password;
+	private String sessionid;
 	
 	//private static final String domain = "intranet.tam.ch";
 	public static final String url = "https://intranet.tam.ch";
@@ -48,11 +47,19 @@ public class Login {
 	{
 		this.username = username;
 		this.password = password;
-		this.school = school;
+		this.school = school; // TODO: Change to School obj
 		
 		Boolean success = false;
 		
 		// Post request parameters
+		
+		/*
+		StringBuilder builder = new StringBuilder();
+		builder.append("loginuser=").append(this.username).append("&loginpassword=").append(this.password).append("&loginschool=").append(this.school);
+		
+		String urlParametersTemp = builder.toString();
+		*/
+		
 		String urlParameters = "loginuser=" + 
 				this.username + 
 				"&loginpassword=" + 
@@ -90,8 +97,7 @@ public class Login {
 		wr.flush();
 		wr.close();
 		
-		int responseCode = con.getResponseCode();
-		System.out.println("Response Code : " + responseCode);
+		System.out.println("Response Code : " + con.getResponseCode());
  
 		BufferedReader in = new BufferedReader(
 		        new InputStreamReader(con.getInputStream()));
@@ -148,6 +154,8 @@ public class Login {
 	 */
 	public String postRequest(String url, String postString) throws IOException
 	{
+		
+		//TODO: user StringBuilder
 		String cookies = "sturmuser=" + this.username + "; sturmsession=" + this.sessionid;
 		byte[] postData = postString.getBytes(Charset.forName("UTF-8"));
 		int postDataLength = postData.length;
@@ -155,6 +163,8 @@ public class Login {
 		URL obj = new URL(url);
 		System.out.println("Sending 'POST' request to URL : " + url);
 		
+		
+		//TODO: code duplication
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 		con.setRequestMethod("POST");
 		con.setRequestProperty("User-Agent", "Mozilla/5.0");
@@ -198,6 +208,7 @@ public class Login {
 	 */
 	public String getRequest(String url) throws IOException
 	{
+		//TODO: user StringBuilder
 		String cookies = "sturmuser=" + this.username + "; sturmsession=" + this.sessionid;
 		
 		URL obj = new URL(url);
@@ -224,11 +235,5 @@ public class Login {
 		in.close();
 		
 		return response.toString();
-	}
-	
-
-	
-	
-	
-	
+	}	
 }

@@ -7,11 +7,12 @@ import no.northcode.jens.intranetsek2.timetable.LessonGroup;
 import no.northcode.jens.intranetsek2.timetable.StudentClass;
 
 
+@SuppressWarnings("unused")
 public class Main {
 	
 	
 	public static void main(String[] args) throws Exception
-	{
+	{/*
 		for(School s : School.getSchoolList())
 		{
 			System.out.println(s.id + " - " + s.name);
@@ -28,6 +29,6 @@ public class Main {
 			{
 				System.out.println(les.startTime.toString() + " -- " + les.endTime.toString() + "::" + lesbian.name);
 			}
-		}
+		}*/
 	}
 }
