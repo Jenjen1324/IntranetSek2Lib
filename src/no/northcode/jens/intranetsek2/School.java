@@ -46,6 +46,10 @@ public class School {
 	public String getId() {
 		return id;
 	}
+	
+	public String getType() {
+		return type;
+	}
 
 	/**
 	 * Instantiates a new school.
