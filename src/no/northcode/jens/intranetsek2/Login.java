@@ -9,6 +9,11 @@ import java.nio.charset.Charset;
 import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 // TODO: Auto-generated Javadoc
 /**
  * *
@@ -17,8 +22,6 @@ import javax.net.ssl.HttpsURLConnection;
  * @author Jens V.
  */
 public class Login {
-
-
 
 	/** The school. */
 	private String school;
@@ -34,6 +37,8 @@ public class Login {
 	
 	/** The password. */
 	private String password;
+	
+	private int userid;
 	
 	/** The sessionid. */
 	private String sessionid;
@@ -74,6 +79,10 @@ public class Login {
 	public String getUsername() {
 		return username;
 	}
+	
+	public int getUserid() {
+		return userid;
+	}
 
 	/**
 	 * Sets the news.
@@ -93,6 +102,12 @@ public class Login {
 		return news;
 	}
 	
+	private String cookiesToString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("sturmsession=").append(this.sessionid).append("; sturmuser=").append(this.username);
+		return builder.toString();
+	}
+	
 	//private static final String domain = "intranet.tam.ch";
 	/** The Constant URL. */
 	public static final String URL = "https://intranet.tam.ch";
@@ -101,8 +116,15 @@ public class Login {
 	public static final String URL_NEWS = "/index/all-appointments";
 	
 	/** The Constant URL_TIMETABLE. */
-	public static final String URL_TIMETABLE = "/external/index/act/tt_oneclassNew";
+	public static final String URL_TIMETABLE = "/timetable/ajax-get-timetable";
 	//private static final String URL_LIST_CLASS = "/list/index/list/45";
+
+	
+	public String getInternUrl(String suburl) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(URL).append("/").append(this.school).append(suburl);
+		return sb.toString();
+	}
 	
 	/**
 	 * *
@@ -152,6 +174,7 @@ public class Login {
  
 		this.getUrlConnectionResponse(con);
 		
+		// Read Cookies
 		String headerName = null;
 		for (int i=1; (headerName = con.getHeaderFieldKey(i))!=null; i++) {
 		 	if (headerName.equals("Set-Cookie")) {                  
@@ -169,6 +192,9 @@ public class Login {
 		
 		if(!success)
 			throw new LoginException("Login failed");
+		
+		// Get userid
+		this.userid = Integer.parseInt(Jsoup.parse(this.getRequest(URL + "/" +  school)).select("a[onclick][title][href]").first().attr("onclick").split("\\(")[1].split(",")[0].toString());
 	}
 	
 	/**
@@ -205,7 +231,9 @@ public class Login {
 		
 		// Open Url connection
 		HttpsURLConnection con = this.getUrlConnection(url, "POST");
+		con.setRequestProperty("Cookie", this.cookiesToString());
 		// Set Custom Post Properties
+		con.setRequestProperty("X-Requested-With", "XMLHttpRequest");
 		con.setRequestProperty("Content-Length", Integer.toString( postDataLength ));
 		con.setDoOutput(true);
 		con.setDoInput(true);
@@ -244,28 +272,39 @@ public class Login {
 	public String getRequest(String url) throws IOException
 	{
 		HttpsURLConnection con = this.getUrlConnection(url, "GET");
+		con.setRequestProperty("Cookie", this.cookiesToString());
 		con.connect();
 		return this.getUrlConnectionResponse(con);
 	}	
 	
+	/**
+	 * Gets the url connection and sets the minimum required Request Properties.
+	 *
+	 * @param url the url
+	 * @param method the method (GET or POST)
+	 * @return the url connection
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private HttpsURLConnection getUrlConnection(String url, String method) throws IOException {
 		URL obj = new URL(url);
 		System.out.println("Sending '" + method + "' request to URL : " + url);
-
-		StringBuilder builder = new StringBuilder();
-		builder.append("sturmsession=").append(this.sessionid).append("; sturmuser=").append(this.username);
-		String cookies = builder.toString();
 		
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-		con.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+		con.setRequestMethod(method);
 		con.setRequestProperty("User-Agent", "Mozilla/5.0");
 		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 		con.setRequestProperty("Charset", "utf-8");
-		con.setRequestProperty("Cookie", cookies);
 		
 		return con;
 	}
 	
+	/**
+	 * Gets the url connection response.
+	 *
+	 * @param con the con
+	 * @return the url connection response
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private String getUrlConnectionResponse(HttpsURLConnection con) throws IOException {
 		BufferedReader in = new BufferedReader(
 		        new InputStreamReader(con.getInputStream()));
