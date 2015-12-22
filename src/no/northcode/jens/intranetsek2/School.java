@@ -2,12 +2,17 @@ package no.northcode.jens.intranetsek2;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import com.jayway.jsonpath.JsonPath;
+
+import net.minidev.json.JSONArray;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -23,6 +28,7 @@ public class School {
 	/** The id. */
 	private String id;
 	
+	private String type;
 	/**
 	 * Gets the name.
 	 *
@@ -63,6 +69,10 @@ public class School {
 		this.id = id;
 	}
 	
+	private School() {
+		
+	}
+	
 	/**
 	 * *
 	 * Gets the list of schools of which you can choose
@@ -75,15 +85,29 @@ public class School {
 	{
 		List<School> schools = new ArrayList<School>();
 		
-		Document doc = Jsoup.connect("https://aai.tam.ch/idp/Authn/UserPassword").get();
-		Elements elements = doc.getElementsByAttributeValue("name", "loginschool").first().getElementsByTag("option");
+		Document doc = Jsoup.connect("https://intranet.tam.ch").get();
+		Elements elements = doc.getElementsByTag("script");
 		
 		for(Element e : elements)
 		{
-			if(!e.attr("value").equals("-1"))
-			{
-				School s = new School(e.text(), e.attr("value"));
-				schools.add(s);
+			if(e.html().contains("Login.schools=")) {
+				String[] tmp = e.html().split("Login\\.schools=");
+				String json = tmp[1].split(";")[0].toString();
+				System.out.println(json);
+				
+				JSONArray data = JsonPath.read(json, "$.*.*");
+				
+				for(Object obj : data) {
+					@SuppressWarnings("unchecked")
+					HashMap<Object, Object> sdata = (HashMap<Object, Object>) obj;
+					School s = new School();
+					s.id = (String) sdata.get("short_name");
+					s.name = (String) sdata.get("name");
+					s.type = (String) sdata.get("type");
+					schools.add(s);
+				}
+				
+				break;
 			}
 		}
 		
