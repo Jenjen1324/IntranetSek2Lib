@@ -9,8 +9,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 
-import no.northcode.jens.intranetsek2.timetable.Term;
-
 // TODO: Auto-generated Javadoc
 /**
  * *
@@ -27,13 +25,7 @@ public class Login {
 	
 	/** The _class. */
 	private String _class;
-	
-	/** The terms. */
-	private List<Term> terms;
-	
-	/** The default term. */
-	private Term defaultTerm;
-	
+
 	/** The news. */
 	private List<News> news;
 	
@@ -64,41 +56,6 @@ public class Login {
 		this._class = _class;
 	}
 
-	/**
-	 * Gets the terms.
-	 *
-	 * @return the terms
-	 */
-	public List<Term> getTerms() {
-		return terms;
-	}
-
-	/**
-	 * Sets the terms.
-	 *
-	 * @param terms the new terms
-	 */
-	public void setTerms(List<Term> terms) {
-		this.terms = terms;
-	}
-
-	/**
-	 * Gets the default term.
-	 *
-	 * @return the default term
-	 */
-	public Term getDefaultTerm() {
-		return defaultTerm;
-	}
-
-	/**
-	 * Sets the default term.
-	 *
-	 * @param defaultTerm the new default term
-	 */
-	public void setDefaultTerm(Term defaultTerm) {
-		this.defaultTerm = defaultTerm;
-	}
 
 	/**
 	 * Gets the school.
@@ -176,27 +133,16 @@ public class Login {
 		
 		System.out.println("\nSending 'POST' request to URL : " + URL);
 		System.out.println("Post parameters : " + urlParameters);
-		
-		URL obj = null;
-		try {
-			obj = new URL(URL);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+				
 		// WebRequest
-		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-		con.setRequestMethod("POST");
-		con.setRequestProperty("User-Agent", "Mozilla/5.0");
-		con.setRequestProperty( "charset", "utf-8");
-		con.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded"); 
+		HttpsURLConnection con = this.getUrlConnection(URL, "POST");
 		con.setRequestProperty( "Content-Length", Integer.toString( postDataLength ));
 		con.setDoOutput(true);
 		con.setDoInput(true);
 		con.setInstanceFollowRedirects( false );
-		con.setUseCaches( false );
+		con.setUseCaches( true );
 		
+		// Write Post Data
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 		wr.write(postData);
 		wr.flush();
@@ -204,20 +150,13 @@ public class Login {
 		
 		System.out.println("Response Code : " + con.getResponseCode());
  
-		BufferedReader in = new BufferedReader(
-		        new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
- 
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
+		this.getUrlConnectionResponse(con);
 		
 		String headerName = null;
 		for (int i=1; (headerName = con.getHeaderFieldKey(i))!=null; i++) {
 		 	if (headerName.equals("Set-Cookie")) {                  
-		 		String cookie = con.getHeaderField(i);  
+		 		String cookie = con.getHeaderField(i); 
+		 		System.out.println("Login Cookie: " + cookie);
 		 		String[] parts = cookie.split(";");
 		 		String[] parts2 = parts[0].split("=");
 		 		
@@ -230,11 +169,6 @@ public class Login {
 		
 		if(!success)
 			throw new LoginException("Login failed");
-		
-		//print result
-		System.out.println(response.toString());
- 
-		
 	}
 	
 	/**
@@ -263,52 +197,40 @@ public class Login {
 	 */
 	public String postRequest(String url, String postString) throws IOException
 	{
-		
-		//TODO: user StringBuilder
-		StringBuilder builder = new StringBuilder();
-		builder.append("sturmuser=").append(this.username).append("; sturmsession=").append(this.sessionid);
-		String cookies = builder.toString();
+		// Get Post Data Length
 		byte[] postData = postString.getBytes(Charset.forName("UTF-8"));
 		int postDataLength = postData.length;
 		
-		URL obj = new URL(url);
-		System.out.println("Sending 'POST' request to URL : " + url);
+		System.out.println("Post Data: " + postString);
 		
-		
-		//TODO: code duplication
-		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-		con.setRequestMethod("POST");
-		con.setRequestProperty("User-Agent", "Mozilla/5.0");
-		con.setRequestProperty( "charset", "utf-8");
-		con.setRequestProperty( "Content-Type", "application/x-www-form-urlencoded"); 
-		con.setRequestProperty( "Content-Length", Integer.toString( postDataLength ));
-		con.setRequestProperty("Cookie", cookies);
+		// Open Url connection
+		HttpsURLConnection con = this.getUrlConnection(url, "POST");
+		// Set Custom Post Properties
+		con.setRequestProperty("Content-Length", Integer.toString( postDataLength ));
 		con.setDoOutput(true);
 		con.setDoInput(true);
 		con.setInstanceFollowRedirects( false );
-		con.setUseCaches( false );
+		con.setUseCaches( true );
 		con.connect();
 		
+		// Write Post Data
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 		wr.write(postData);
 		wr.flush();
 		wr.close();
 		
-		int responseCode = con.getResponseCode();
-		System.out.println("Post parameters : " + postString);
-		System.out.println("Response Code : " + responseCode);
+		// Get the response
+		String response = this.getUrlConnectionResponse(con);
 		
-		BufferedReader in = new BufferedReader(
-		        new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-	
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
+		String headerName = null;
+		for (int i=1; (headerName = con.getHeaderFieldKey(i))!=null; i++) {
+		 	if (headerName.equals("Set-Cookie")) {                  
+		 		String cookie = con.getHeaderField(i);  
+		 		System.out.println("New Cookie: " + cookie);
+		 	}
 		}
-		in.close();
 		
-		return response.toString();
+		return response;
 	}
 
 	/**
@@ -321,23 +243,30 @@ public class Login {
 	 */
 	public String getRequest(String url) throws IOException
 	{
+		HttpsURLConnection con = this.getUrlConnection(url, "GET");
+		con.connect();
+		return this.getUrlConnectionResponse(con);
+	}	
+	
+	private HttpsURLConnection getUrlConnection(String url, String method) throws IOException {
+		URL obj = new URL(url);
+		System.out.println("Sending '" + method + "' request to URL : " + url);
+
 		StringBuilder builder = new StringBuilder();
-		builder.append("sturmuser=").append(this.username).append("; sturmsession=").append(this.sessionid);
+		builder.append("sturmsession=").append(this.sessionid).append("; sturmuser=").append(this.username);
 		String cookies = builder.toString();
 		
-		URL obj = new URL(url);
-		System.out.println("Sending 'GET' request to URL : " + url);
-		
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-		con.setRequestMethod("GET");
+		con.setRequestProperty("X-Requested-With", "XMLHttpRequest");
 		con.setRequestProperty("User-Agent", "Mozilla/5.0");
-		con.setRequestProperty( "charset", "utf-8");
-		con.setRequestProperty("Content-Type", "text/html");
+		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+		con.setRequestProperty("Charset", "utf-8");
 		con.setRequestProperty("Cookie", cookies);
-		con.connect();
 		
-		System.out.println("Response Code: " + con.getResponseCode());
-		
+		return con;
+	}
+	
+	private String getUrlConnectionResponse(HttpsURLConnection con) throws IOException {
 		BufferedReader in = new BufferedReader(
 		        new InputStreamReader(con.getInputStream()));
 		String inputLine;
@@ -348,7 +277,9 @@ public class Login {
 		}
 		in.close();
 		
+		System.out.println("Response Code: " + con.getResponseCode());
+		
 		return response.toString();
-	}	
+	}
 
 }
