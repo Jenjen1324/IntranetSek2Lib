@@ -196,8 +196,8 @@ public class Lesson {
 			.append(this.type).append(" ")
 			.append(this.startTime.getHour()).append(":").append(this.startTime.getMinute()).append(" - ")
 			.append(this.endTime.getHour()).append(":").append(this.endTime.getMinute()).append(": ")
-			.append(" ").append(this.title).append(" ").append(this.roomName)
-			.append(" ").append(this.message);
+			.append(" ").append(this.title).append(" ZI: ").append(this.roomName);
+		
 		return sb.toString();
 	}
 	
