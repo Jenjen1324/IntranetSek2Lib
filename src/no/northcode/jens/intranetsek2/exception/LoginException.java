@@ -1,4 +1,4 @@
-package no.northcode.jens.intranetsek2;
+package no.northcode.jens.intranetsek2.exception;
 
 /**
  * Exception thrown when the login fails/expired
@@ -7,6 +7,11 @@ package no.northcode.jens.intranetsek2;
  */
 public class LoginException extends Exception {
 
+	/**
+	 * Instantiates a new login exception.
+	 * Thrown when there's an error while logging in
+	 * @param message the message
+	 */
 	public LoginException(String message)
 	{
 		super(message);

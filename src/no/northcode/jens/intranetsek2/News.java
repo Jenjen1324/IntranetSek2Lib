@@ -1,5 +1,6 @@
 package no.northcode.jens.intranetsek2;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class News {
 	 * @param html Source of the news page
 	 * @return List of News objects
 	 */
-	public static List<News> parseNews(String html)
+	private static List<News> parseNews(String html)
 	{
 		List<News> news = new ArrayList<News>();
 		
@@ -83,6 +84,20 @@ public class News {
 		}
 	
 		return news;
+	}
+	
+	/***
+	 * Fetches the news of the frontpage.
+	 *
+	 * @return A list of News objects
+	 * @throws IOException When the WebRequest fails
+	 */
+	public List<News> fetchNews(Login login) throws IOException
+	{
+		String requestUrl = login.createInternUrl(Login.URL_NEWS);
+		String response = login.getRequest(requestUrl);
+		
+		return News.parseNews(response);
 	}
 	
 }

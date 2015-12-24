@@ -22,61 +22,6 @@ import net.minidev.json.JSONArray;
  */
 public class School {
 
-	/** The name. */
-	private String name;
-	
-	/** The id. */
-	private String id;
-	
-	private String type;
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-	
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
-	
-	public String getType() {
-		return type;
-	}
-
-	/**
-	 * Instantiates a new school.
-	 *
-	 * @param id the id
-	 * @param name the name
-	 */
-	public School(String id, String name)
-	{
-		this.id = id;
-		this.name = name;
-	}
-	
-	/**
-	 * Instantiates a new school.
-	 *
-	 * @param id the id
-	 */
-	public School(String id)
-	{
-		this.id = id;
-	}
-	
-	private School() {
-		
-	}
-	
 	/**
 	 * *
 	 * Gets the list of schools of which you can choose
@@ -116,5 +61,70 @@ public class School {
 		}
 		
 		return schools;
+	}
+	
+	/** The name. */
+	private String name;
+	
+	/** The id. */
+	private String id;
+	
+	/** The type. */
+	private String type;
+	
+	/**
+	 * Instantiates a new school.
+	 */
+	private School() {
+		
+	}
+	
+	/**
+	 * Instantiates a new school.
+	 *
+	 * @param id the id
+	 */
+	public School(String id)
+	{
+		this.id = id;
+	}
+
+	/**
+	 * Instantiates a new school.
+	 *
+	 * @param id the id
+	 * @param name the name
+	 */
+	public School(String id, String name)
+	{
+		this.id = id;
+		this.name = name;
+	}
+	
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
 	}
 }
