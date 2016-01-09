@@ -18,6 +18,8 @@ import net.minidev.json.JSONArray;
  */
 public class Lesson {
 
+	private static String zoneId = "Europe/Zurich";
+	
 	/**
 	 * The Enum LessonType.
 	 */
@@ -116,8 +118,8 @@ public class Lesson {
 			
 			Lesson l = new Lesson();
 			l.id = (Integer) lessondata.get("id");
-			l.startTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(((String) lessondata.get("start")).substring(6, 19))),  ZoneId.systemDefault());
-			l.endTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(((String) lessondata.get("end")).substring(6, 19))),  ZoneId.systemDefault());
+			l.startTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(((String) lessondata.get("start")).substring(6, 19))),  ZoneId.of(Lesson.zoneId));
+			l.endTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(((String) lessondata.get("end")).substring(6, 19))),  ZoneId.of(Lesson.zoneId));
 			l.type = (String) lessondata.get("timetableEntryTypeShort");
 			l.title = (String) lessondata.get("title");
 			l.courseName = (String) lessondata.get("courseName");

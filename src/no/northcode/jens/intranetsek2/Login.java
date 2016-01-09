@@ -65,12 +65,14 @@ public class Login {
 	 * @throws LoginException When the user can't log in (e.g. wrong credentials)
 	 * @throws IntranetException If any interaction with the intranet is unexpected or fails
 	 */
-	public Login(String username, String password, String school) throws IOException, InvalidCredentialsException, LoginException, IntranetException
+	public Login(String username, String password, String school)
 	{
 		this.username = username;
 		this.password = password;
 		this.school = school; // TODO: Change to School obj
-		
+	}
+	
+	public void login() throws IOException, InvalidCredentialsException, LoginException, IntranetException {
 		Boolean success = false;
 		
 		// Post request parameters

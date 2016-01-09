@@ -63,6 +63,26 @@ public class School {
 		return schools;
 	}
 	
+	public static HashMap<String, List<School>> getStructuredList(List<School> schools) {
+		HashMap<String, List<School>> map = new HashMap<String, List<School>>();
+		for(School s : schools) {
+			if(!map.containsKey(s.type)) {
+				map.put(s.type, new ArrayList<School>());
+			}
+			map.get(s.type).add(s);
+		}
+		
+		return map;
+	}
+	
+	public static School findSchoolByName(String name, List<School> schools) {
+		for(School s : schools) {
+			if(s.name.equals(name))
+				return s;
+		}
+		return null;
+	}
+	
 	/** The name. */
 	private String name;
 	
