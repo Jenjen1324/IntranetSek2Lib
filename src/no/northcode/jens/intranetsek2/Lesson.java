@@ -74,7 +74,7 @@ public class Lesson {
 	 */
 	public static ArrayList<Lesson> getLessons(Login login, LocalDate day, int days) throws IOException {
 		LocalDateTime start = day.atStartOfDay();
-		LocalDateTime end = start.plusDays(1);
+		LocalDateTime end = start.plusDays(days-1);
 		return getLessons(login, start, end);
 	
 	}
@@ -91,7 +91,7 @@ public class Lesson {
 	public static ArrayList<Lesson> getLessons(Login login, LocalDateTime startTime, LocalDateTime endTime) throws IOException {
 		ZoneId zoneId = ZoneId.systemDefault();
 		long start = startTime.atZone(zoneId).toEpochSecond() * 1000;
-		long end = startTime.atZone(zoneId).toEpochSecond() * 1000;
+		long end = endTime.atZone(zoneId).toEpochSecond() * 1000;
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("startDate=").append(start).append("&endDate=").append(end).append("&studentId%5B%5D=").append(login.getUserid()).append("&holidaysOnly=0");
