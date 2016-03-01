@@ -84,8 +84,8 @@ public class Login {
 		byte[] postData = urlParameters.getBytes(Charset.forName("UTF-8"));
 		int postDataLength = postData.length;
 		
-		System.out.println("\nSending 'POST' request to URL : " + URL);
-		System.out.println("Post parameters : " + urlParameters);
+		/*System.out.println("\nSending 'POST' request to URL : " + URL);
+		System.out.println("Post parameters : " + urlParameters);*/
 				
 		// WebRequest
 		HttpsURLConnection con = this.openUrlConnection(URL, "POST");

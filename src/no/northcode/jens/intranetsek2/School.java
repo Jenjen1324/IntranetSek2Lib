@@ -42,7 +42,7 @@ public class School {
 			if(e.html().contains("Login.schools=")) {
 				String[] tmp = e.html().split("Login\\.schools=");
 				String json = tmp[1].split(";")[0].toString();
-				System.out.println(json);
+				//System.out.println(json);
 				
 				JSONArray data = JsonPath.read(json, "$.*.*");
 				
