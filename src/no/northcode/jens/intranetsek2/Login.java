@@ -132,7 +132,7 @@ public class Login {
 			throw new IntranetException();
 		
 		// Get userid
-		this.userid = Integer.parseInt(Jsoup.parse(this.getRequest(URL + "/" +  school)).select("a[onclick][title][href]").first().attr("onclick").split("\\(")[1].split(",")[0].toString());
+		this.userid = Integer.parseInt(Jsoup.parse(this.getRequest(URL + "/" +  school)).select("a[onclick][title][href]").first().attr("onclick").split("\\(")[1].split(",")[0].toString().replace("\'", ""));
 	}
 	
 	/**
